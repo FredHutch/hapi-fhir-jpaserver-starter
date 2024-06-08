@@ -28,7 +28,7 @@ test:
     - name: sc-registry.fredhutch.org/inspire-hapifhir:test
       alias: inspire-hapifhir
   script:
-    - sleep 15 && curl -sI  http://inspire-hapifhir:8080  |head -1|grep -q "200 OK"
+    - sleep 120 && curl -sI  http://inspire-hapifhir:8080  |head -1|grep -q "200 OK"
 
 deploy:
   stage: deploy
@@ -38,7 +38,7 @@ deploy:
   script:
     - docker tag sc-registry.fredhutch.org/inspire-hapifhir:test sc-registry.fredhutch.org/inspire-hapifhir:latest
     - docker push sc-registry.fredhutch.org/inspire-hapifhir:latest
-    - sleep 120
+    - sleep 15
     - echo $SC_SWARM_CICD_SSH_KEY | base64 -d > ./sc_swarm_cicd_ssh_key
     - chmod 0400 ./sc_swarm_cicd_ssh_key
     - python3 build_helper.py docker-compose.yml | ssh -i ./sc_swarm_cicd_ssh_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@sc-swarm-mgr.fhcrc.org docker stack deploy --with-registry-auth -c - inspire-hapifhir
