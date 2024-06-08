@@ -34,7 +34,7 @@ deploy:
   stage: deploy
   only:
     refs:
-        - main
+        - master
   script:
     - docker tag sc-registry.fredhutch.org/inspire-hapifhir:test sc-registry.fredhutch.org/inspire-hapifhir:latest
     - docker push sc-registry.fredhutch.org/inspire-hapifhir:latest
