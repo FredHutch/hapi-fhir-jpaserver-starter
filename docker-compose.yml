@@ -1,20 +1,20 @@
-version: "3"
+version: '3.3'
 services:
-  hapi-fhir-jpaserver-start:
-    build: .
-    container_name: hapi-fhir-jpaserver-start
-    restart: on-failure
-    ports:
-      - "8080:8080"
-  hapi-fhir-postgres:
-    image: postgres:13-alpine
-    container_name: hapi-fhir-postgres
-    restart: always
-    environment:
-      POSTGRES_DB: "hapi"
-      POSTGRES_USER: "admin"
-      POSTGRES_PASSWORD: "admin"
-    volumes:
-      - hapi-fhir-postgres:/var/lib/postgresql/data
-volumes:
-  hapi-fhir-postgres:
+  inspire-hapifhir:
+    image: sc-registry.fredhutch.org/inspire-hapifhir:latest
+    networks:
+      - proxy
+    deploy:
+      restart_policy:
+        condition: on-failure
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.inspire-hapifhir.rule=Host(`inspire-hapifhir.fredhutch.org`)"
+        - "traefik.http.routers.inspire-hapifhir-secured.rule=Host(`inspire-hapifhir.fredhutch.org`)"
+        - "traefik.http.routers.inspire-hapifhir.entrypoints=web,web-secured"
+        - "traefik.http.services.inspire-hapifhir.loadbalancer.server.port=8080" # it seems you always need to give traefik a port so it 'notices' the service
+        - "traefik.http.routers.inspire-hapifhir.tls=true"
+
+networks:
+  proxy:
+    external: true

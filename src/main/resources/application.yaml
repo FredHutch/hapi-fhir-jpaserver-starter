@@ -19,11 +19,10 @@ spring:
     baselineOnMigrate: true
     fail-on-missing-locations: false
   datasource:
-    #url: 'jdbc:h2:file:./target/database/h2'
-    url: jdbc:h2:mem:test_mem
-    username: sa
-    password: null
-    driverClassName: org.h2.Driver
+    url: "${JDBC_URL}"
+    username: "${DB_USER}"
+    password: "${DB_PASSWORD}"
+    driverClassName: "com.mysql.cj.jdbc.Driver"
     max-active: 15
 
     # database connection pool size

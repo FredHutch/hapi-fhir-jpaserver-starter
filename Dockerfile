@@ -1,4 +1,16 @@
 FROM docker.io/library/maven:3.9.6-eclipse-temurin-17 AS build-hapi
+
+
+ARG JDBC_URL
+ENV JDBC_URL=${JDBC_URL}
+ARG DB_USER
+ENV DB_USER=${DB_USER}
+ARG DB_PASSWORD
+ENV DB_PASSWORD=${DB_PASSWORD}
+
+
+RUN apt-get update -y && apt-get install -y gettext-base
+
 WORKDIR /tmp/hapi-fhir-jpaserver-starter
 
 ARG OPENTELEMETRY_JAVA_AGENT_VERSION=1.33.3
@@ -9,6 +21,8 @@ COPY server.xml .
 RUN mvn -ntp dependency:go-offline
 
 COPY src/ /tmp/hapi-fhir-jpaserver-starter/src/
+RUN cp /tmp/hapi-fhir-jpaserver-starter/src/main/resources/application.yaml /tmp/hapi-fhir-jpaserver-starter/src/main/resources/application.yaml.orig
+RUN cat /tmp/hapi-fhir-jpaserver-starter/src/main/resources/application.yaml.orig | envsubst > /tmp/hapi-fhir-jpaserver-starter/src/main/resources/application.yaml
 RUN mvn clean install -DskipTests -Djdk.lang.Process.launchMechanism=vfork
 
 FROM build-hapi AS build-distroless
