@@ -38,7 +38,7 @@ deploy:
   script:
     - docker tag sc-registry.fredhutch.org/inspire-hapifhir:test sc-registry.fredhutch.org/inspire-hapifhir:latest
     - docker push sc-registry.fredhutch.org/inspire-hapifhir:latest
-    - sleep 15
+    - sleep 120
     - echo $SC_SWARM_CICD_SSH_KEY | base64 -d > ./sc_swarm_cicd_ssh_key
     - chmod 0400 ./sc_swarm_cicd_ssh_key
     - python3 build_helper.py docker-compose.yml | ssh -i ./sc_swarm_cicd_ssh_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@sc-swarm-mgr.fhcrc.org docker stack deploy --with-registry-auth -c - inspire-hapifhir
