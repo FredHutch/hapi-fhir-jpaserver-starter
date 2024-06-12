@@ -5,6 +5,8 @@ RUN rm -rf /usr/local/tomcat/webapps/ROOT
 
 # Copy the renamed WAR file to the webapps directory
 COPY ROOT.war /usr/local/tomcat/webapps/
+RUN mkdir -p /usr/local/tomcat/webapps/ROOT
+COPY web.xml /usr/local/tomcat/webapps/ROOT/WEB-INF/
 
 EXPOSE 8080
 
