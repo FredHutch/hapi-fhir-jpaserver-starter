@@ -20,7 +20,6 @@ build:
   stage: build
   script:
     - aws s3 cp s3://fh-div-adm-scicomp-inspire-war/hapi-fhir-jpaserver-example.war ./ROOT.war
-    - aws s3 cp s3://fh-div-adm-scicomp-inspire-war/web.xml .
     - docker build --build-arg JDBC_URL=${JDBC_URL} --build-arg DB_USER=${DB_USER} --build-arg DB_PASSWORD=${DB_PASSWORD}  -t sc-registry.fredhutch.org/inspire-hapifhir:test .
     - docker push sc-registry.fredhutch.org/inspire-hapifhir:test
 
